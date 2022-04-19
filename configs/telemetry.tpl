@@ -55,7 +55,7 @@ scrape_configs:
       cert_file: /etc/prometheus/vault-cert.pem
       key_file: /etc/prometheus/vault-key.pem
     static_configs:
-    - targets: ['${aws_asg_instance_private_ips}:8200']
+    - targets: [ $aws_asg_instance_private_ips ]
 EOF
 
 sudo docker network create --attachable --subnet 10.42.74.0/24 telemetry
