@@ -34,7 +34,11 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt install -y docker-ce
 sudo usermod -aG docker $USER
 
+
 #Prometheus
+sleep 90 #~wait for aws cli to install
+aws_asg_instance_private_ips=$(for x in $(aws --output text --query "AutoScalingGroups[0].Instances[*].InstanceId" autoscaling describe-auto-scaling-groups --auto-scaling-group-names rchao-vault --region us-east-1) ; do echo $(aws --region us-east-1 ec2 describe-instances --filters "Name=instance-state-name,Values=running" "Name=instance-id,Values=$x" --query 'Reservations[*].Instances[*].[PrivateIpAddress]' --output text):8200; done)
+
 sudo mkdir -p /etc/prometheus
 
 cat << EOF | sudo tee -a /etc/prometheus/prometheus.yml
@@ -51,7 +55,7 @@ scrape_configs:
       cert_file: /etc/prometheus/vault-cert.pem
       key_file: /etc/prometheus/vault-key.pem
     static_configs:
-    - targets: ['${vault_lb_dns_name}:8200']
+    - targets: ['${aws_asg_instance_private_ips}:8200']
 EOF
 
 sudo docker network create --attachable --subnet 10.42.74.0/24 telemetry
