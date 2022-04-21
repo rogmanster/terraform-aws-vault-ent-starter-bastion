@@ -43,11 +43,11 @@ sudo mkdir -p /etc/prometheus
 
 cat << EOF | sudo tee -a /etc/prometheus/prometheus.yml
 scrape_configs:
-  - job_name: 'vault'
+  - job_name: 'grafana'
     metrics_path: '/v1/sys/metrics'
     params:
       format: [prometheus]
-    bearer_token: 'example'
+    #bearer_token: 'example'
     scheme: 'https'
     tls_config:
       insecure_skip_verify: true
@@ -78,7 +78,7 @@ cat << EOF | sudo tee -a /etc/grafana/datasource.yml
 apiVersion: 1
 
 datasources:
-- name: vault
+- name: grafana
   type: prometheus
   access: server
   orgId: 1
