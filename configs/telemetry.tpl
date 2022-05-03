@@ -115,6 +115,13 @@ docker run \
     -v /etc/grafana/datasource.yml:/etc/grafana/provisioning/datasources/prometheus_datasource.yml \
     grafana/grafana
 
+#SSH
+cat << EOF | sudo tee -a /home/ubuntu/.ssh/id_rsa
+${private_key_name}
+EOF
+sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/id_rsa
+sudo chmod 0600 /home/ubuntu/.ssh/id_rsa
+
 echo "Setup Vault profile"
 cat <<PROFILE | sudo tee /etc/profile.d/vault.sh
 export VAULT_ADDR="https://${vault_lb_dns_name}:8200"

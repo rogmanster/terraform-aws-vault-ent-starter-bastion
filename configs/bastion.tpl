@@ -27,6 +27,13 @@ jq -r .vault_ca <<< "$secret_result" | base64 -d > /opt/vault/tls/vault-ca.pem
 
 jq -r .vault_pk <<< "$secret_result" | base64 -d > /opt/vault/tls/vault-key.pem
 
+#SSH
+cat << EOF | sudo tee -a /home/ubuntu/.ssh/id_rsa
+${private_key_name}
+EOF
+sudo chown ubuntu:ubuntu /home/ubuntu/.ssh/id_rsa
+sudo chmod 0600 /home/ubuntu/.ssh/id_rsa
+
 echo "Setup Vault profile"
 cat <<PROFILE | sudo tee /etc/profile.d/vault.sh
 export VAULT_ADDR="https://${vault_lb_dns_name}:8200"

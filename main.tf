@@ -31,6 +31,7 @@ data "template_file" "bastion" {
     secrets_manager_arn = var.secrets_manager_arn
     aws_region          = var.aws_region
     vault_lb_dns_name   = var.vault_lb_dns_name
+    private_key_name    = tls_private_key.awskey.private_key_pem
   }
 }
 
