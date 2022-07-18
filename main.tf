@@ -23,32 +23,6 @@ resource "aws_key_pair" "awskey" {
   public_key = tls_private_key.awskey.public_key_openssh
 }
 
-/* Deprecated template_file
-data "template_file" "bastion" {
-  count    = var.bastion_count
-  template = file("${path.module}/configs/bastion.tpl")
-  vars = {
-    vault_version       = var.vault_version
-    secrets_manager_arn = var.secrets_manager_arn
-    aws_region          = var.aws_region
-    vault_lb_dns_name   = var.vault_lb_dns_name
-    private_key_name    = tls_private_key.awskey.private_key_pem
-  }
-}
-
-data "template_file" "telemetry" {
-  count    = var.telemetry_count
-  template = file("${path.module}/configs/telemetry.tpl")
-  vars = {
-    vault_version       = var.vault_version
-    secrets_manager_arn = var.secrets_manager_arn
-    aws_region          = var.aws_region
-    vault_lb_dns_name   = var.vault_lb_dns_name
-    private_key_name    = tls_private_key.awskey.private_key_pem
-  }
-}
-*/
-
 resource "aws_instance" "bastion" {
   count                   = var.bastion_count
   ami                     = data.aws_ami.ubuntu.id
@@ -64,7 +38,6 @@ resource "aws_instance" "bastion" {
     Description = "Bastion Node"
   }
 
-  #user_data = element(data.template_file.bastion.*.rendered, count.index)
   user_data = templatefile("${path.module}/configs/bastion.tpl", {
     vault_version       = var.vault_version
     secrets_manager_arn = var.secrets_manager_arn
@@ -89,7 +62,6 @@ resource "aws_instance" "telemetry" {
     Description = "Telemetry Node"
   }
 
-  #user_data = element(data.template_file.telemetry.*.rendered, count.index)
   user_data = templatefile("${path.module}/configs/bastion.tpl", {
     vault_version       = var.vault_version
     secrets_manager_arn = var.secrets_manager_arn
