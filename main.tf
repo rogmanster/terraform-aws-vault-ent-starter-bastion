@@ -62,7 +62,7 @@ resource "aws_instance" "telemetry" {
     Description = "Telemetry Node"
   }
 
-  user_data = templatefile("${path.module}/configs/bastion.tpl", {
+  user_data = templatefile("${path.module}/configs/telemetry.tpl", {
     vault_version       = var.vault_version
     secrets_manager_arn = var.secrets_manager_arn
     aws_region          = var.aws_region
