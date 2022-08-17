@@ -41,3 +41,7 @@ variable "public_subnet_tags" {
   type        = map(string)
   description = "Tags which specify the subnets to deploy bastion instances into"
 }
+
+variable "lb_type" {
+  default ="application"
+}

@@ -58,6 +58,7 @@ resource "aws_security_group_rule" "bastion_allow_outbound" {
 }
 
 resource "aws_security_group_rule" "vault_lb_outbound_to_bastion" {
+  count                    = var.lb_type == "application" ? 1 : 0
   description              = "Allow outbound traffic from load balancer to Vault nodes on port 8200"
   security_group_id        = var.vault_lb_sg_id
   type                     = "egress"
